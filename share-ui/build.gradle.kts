@@ -7,13 +7,6 @@ plugins {
 
 kotlin {
   androidTarget()
-  js(IR) {
-    browser()
-  }
-  wasm {
-    browser()
-  }
-
   sourceSets {
     val commonMain by getting {
       dependencies {
@@ -37,12 +30,6 @@ kotlin {
         api(compose("org.jetbrains.compose.animation:animation-core"))
         api(compose("org.jetbrains.compose.ui:ui-geometry"))
       }
-    }
-    val wasmMain by getting {
-      dependsOn(commonMain)
-    }
-    val jsMain by getting {
-      dependsOn(wasmMain)
     }
   }
 }

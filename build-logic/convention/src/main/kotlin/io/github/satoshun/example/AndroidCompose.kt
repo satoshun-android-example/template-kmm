@@ -30,8 +30,8 @@ internal fun Project.configureMultiplatformCompose(
   extension: ComposeExtension,
 ) {
   extension.apply {
-    val wasmVersion = libs.findVersion("wasmCompose").get()
-    kotlinCompilerPlugin.set(wasmVersion.toString())
+    val jbVersion = libs.findVersion("jbCompose").get()
+    kotlinCompilerPlugin.set(jbVersion.toString())
     val kotlinVersion = libs.findVersion("kotlin").get().toString()
     kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=$kotlinVersion")
   }

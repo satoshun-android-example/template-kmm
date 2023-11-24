@@ -1,18 +1,11 @@
 [versions]
-#kotlin = "1.8.22"
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 kotlincoroutines = "1.7.3"
 
 dagger = "2.48.1"
-#dagger = "HEAD-SNAPSHOT"
 
-#composeCompiler = "1.4.8"
-#composeCompiler = "1.5.2"
-composeCompiler = "1.5.3"
-
-#composeCompiler = "1.4.0-dev-wasm09"
-wasmCompose = "1.4.0-dev-wasm09"
-jbCompose = "1.4.1"
+composeCompiler = "1.5.4"
+jbCompose = "1.5.3"
 
 accompanist = "0.32.0"
 agp = "8.1.4"
@@ -25,8 +18,7 @@ paparazzi = "1.3.1"
 showkase = "1.0.2"
 testParameterInjector = "1.14"
 
-#ksp = "1.8.22-1.0.11"
-ksp = "1.9.10-1.0.13"
+ksp = "1.9.20-1.0.14"
 
 [plugins]
 android-app = { id = "com.android.application", version.ref = "agp" }
@@ -40,7 +32,7 @@ bestPracticesPlugin = { id = "com.autonomousapps.plugin-best-practices-plugin", 
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysisPlugin" }
 sortDependencies = { id = "com.squareup.sort-dependencies", version.ref = "sortDependencies" }
 paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
-compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "wasmCompose" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "jbCompose" }
 
 [libraries]
 compose-bom = "androidx.compose:compose-bom:2023.10.01"
@@ -114,7 +106,7 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 sortDependencies-gradlePlugin = { module = "com.squareup:sort-dependencies-gradle-plugin", version.ref = "sortDependencies" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-compose-gradlePlugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "wasmCompose" }
+compose-gradlePlugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "jbCompose" }
 
 [bundles]
 kotlin-android = ["kotlin-stdlib", "kotlin-coroutine-core", "kotlin-coroutine-ui"]
