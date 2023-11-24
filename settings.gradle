@@ -1,0 +1,45 @@
+pluginManagement {
+  includeBuild("build-logic")
+  repositories {
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+    maven {
+      url = "https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental"
+    }
+    maven {
+      url = "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+  }
+}
+
+//plugins {
+//  id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+//}
+
+dependencyResolutionManagement {
+  repositories {
+    google()
+    mavenCentral()
+    maven {
+      url = "https://androidx.dev/storage/compose-compiler/repository/"
+    }
+    maven {
+      url = "https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental"
+    }
+    maven {
+      url = "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+  }
+}
+
+rootProject.name = "template"
+
+include ':share'
+include ':share-ui'
+include ':preview-screenshots'
+include ':web'
+include ':web-wasm'
+include ':app'
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

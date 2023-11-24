@@ -1,0 +1,40 @@
+name: TEST2
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+    - name: Run
+      id: test
+      run: |
+        touch hoge.text
+        echo "hoge1=ttt" >> $GITHUB_OUTPUT
+        exit 1
+
+    - name: test1
+      if: ${{ failure() && steps.test.outputs.hoge != '' }}
+      run: 
+        echo "test1 ${{ steps.test.outputs.hoge }}"
+
+    - name: test2
+      if: ${{ failure() && steps.test.outputs.hoge1 == '' }}
+      run: 
+        echo "test2 ${{ steps.test.outputs.hoge1 }}"
+
+    - name: test3
+      if: ${{ failure() && steps.test.outputs.hoge1 != '' }}
+      run: 
+        echo "test3 ${{ steps.test.outputs.hoge1 }}"
+
+    - name: test4
+      if: ${{ steps.test.outputs.hoge1 != '' }}
+      run: 
+        echo "test4 ${{ steps.test.outputs.hoge1 }}"
+  
