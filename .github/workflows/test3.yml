@@ -1,8 +1,11 @@
 name: TEST3
 
 on:
-  workflow_dispatch:
-
+  pull_request:
+    types: [opened] 
+  pull_request_review:
+    types: [submitted, dismissed]
+    
 jobs:
   test3:
     runs-on: ubuntu-latest
