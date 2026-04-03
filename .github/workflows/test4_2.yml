@@ -1,12 +1,13 @@
-name: TEST3
+name: TEST4_2
 
 on:
-  pull_request_review:
-    types: [submitted, dismissed]
-    
+  pull_request:
+    types: [opened] 
+            
 jobs:
-  test3:
+  test4:
     runs-on: ubuntu-latest
+    if: true
 
     steps:
     - name: Checkout

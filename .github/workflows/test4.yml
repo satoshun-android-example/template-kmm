@@ -3,8 +3,6 @@ name: TEST4
 on:
   pull_request_review:
     types: [submitted, dismissed]
-  pull_request:
-    types: [opened] 
             
 jobs:
   test4:
