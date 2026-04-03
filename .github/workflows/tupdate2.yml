@@ -1,0 +1,98 @@
+name: Review Gate Status Updater2
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+  pull_request_review:
+    types:
+      - submitted
+      - dismissed
+permissions:
+  contents: read
+  pull-requests: read
+  statuses: write
+jobs:
+  update-review-gate-status2:
+    runs-on: ubuntu-latest
+    env:
+      REVIEW_GATE_CONTEXT: review-gate2
+      ALLOW_WITHOUT_REVIEW_USERS: satoshun
+    steps:
+      - name: Update review-gate commit status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.setFailed('pull_request is missing from the event payload');
+              return;
+            }
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = pr.number;
+            const sha = pr.head.sha;
+            const author = pr.user.login;
+            const action = context.payload.action;
+            const eventName = context.eventName;
+            const exemptUsers = (process.env.ALLOW_WITHOUT_REVIEW_USERS || '')
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean);
+            const contextName = process.env.REVIEW_GATE_CONTEXT || 'review-gate';
+            let state = 'pending';
+            let description = 'At least one approval review is required.';
+            if (exemptUsers.includes(author)) {
+              state = 'success';
+              description = `${author} is exempt from review requirement.`;
+            } else if (
+              eventName === 'pull_request_target' &&
+              ['opened', 'reopened', 'synchronize', 'ready_for_review'].includes(action)
+            ) {
+              // PR作成直後やpush直後は、非 exempt ユーザーなら必ず review 待ちに戻す
+              state = 'pending';
+              description = 'Waiting for an approval review.';
+            } else {
+              const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                owner,
+                repo,
+                pull_number,
+                per_page: 100,
+              });
+              // reviewer ごとの最新の有効 review state を採用する
+              const latestStateByUser = new Map();
+              const sortedReviews = [...reviews].sort((a, b) => {
+                return new Date(a.submitted_at || a.created_at || 0) - new Date(b.submitted_at || b.created_at || 0);
+              });
+              for (const review of sortedReviews) {
+                const reviewer = review.user?.login;
+                const reviewState = review.state;
+                if (!reviewer) continue;
+                if (!reviewState) continue;
+                if (reviewState === 'COMMENTED' || reviewState === 'PENDING') continue;
+                latestStateByUser.set(reviewer, reviewState);
+              }
+              const latestStates = [...latestStateByUser.values()];
+              const hasApproval = latestStates.includes('APPROVED');
+              const hasChangesRequested = latestStates.includes('CHANGES_REQUESTED');
+              if (hasApproval && !hasChangesRequested) {
+                state = 'success';
+                description = 'Approval review found.';
+              } else if (hasChangesRequested) {
+                state = 'pending';
+                description = 'Changes requested review is still active.';
+              } else {
+                state = 'pending';
+                description = 'Waiting for an approval review.';
+              }
+            }
+            await github.rest.repos.createCommitStatus({
+              owner,
+              repo,
+              sha,
+              state,
+              context: contextName,
+              description,
+              target_url: pr.html_url,
+            });
+            core.info(`Set ${contextName}=${state} for ${sha}`);
