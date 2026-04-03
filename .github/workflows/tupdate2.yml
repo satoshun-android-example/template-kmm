@@ -19,7 +19,7 @@ jobs:
       REVIEW_GATE_CONTEXT: review-gate2
       ALLOW_WITHOUT_REVIEW_USERS: satoshun
     steps:
-      - name: Update review-gate commit status
+      - name: Update review-gate commit status1
         uses: actions/github-script@v7
         with:
           script: |
